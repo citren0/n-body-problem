@@ -25,31 +25,39 @@ bodies = [
         y: 500,
         mass: 7 * (10 ** 5),
         xVelocity: 0,
-        yVelocity: 0.0011,
+        yVelocity: 0.00,
     },
     {
         id: "Moon2",
+        x: 300,
+        y: 500,
+        mass: 7 * (10 ** 5),
+        xVelocity: 0,
+        yVelocity: 0.00,
+    },
+    {
+        id: "Moon3",
+        x: 100,
+        y: 900,
+        mass: 7 * (10 ** 5),
+        xVelocity: 0,
+        yVelocity: 0.00,
+    },
+    {
+        id: "Moon4",
         x: 900,
         y: 500,
         mass: 7 * (10 ** 5),
         xVelocity: 0,
-        yVelocity: -0.0011,
+        yVelocity: 0.00,
     },
     {
-        id: "Moon3",
-        x: 500,
-        y: 100,
-        mass: 7 * (10 ** 5),
-        xVelocity: -0.0011,
-        yVelocity: 0,
-    },
-    {
-        id: "Moon4",
-        x: 500,
+        id: "Moon5",
+        x: 900,
         y: 900,
         mass: 7 * (10 ** 5),
-        xVelocity: 0.0011,
-        yVelocity: 0,
+        xVelocity: 0,
+        yVelocity: 0.00,
     },
 ];
 
@@ -76,7 +84,7 @@ const drawFrame = (bodies) =>
         ctx.fill();
         ctx.stroke();
 
-        ctx.font = "18px Arial";
+        ctx.font = "16px Arial";
         ctx.fillText(body.id, bodyCenterX + body.thickness + buffer, bodyCenterY);
     });
 
@@ -115,7 +123,6 @@ const calculateVelocity = (bodies, deltaT) =>
 
                 sumXForce += xForceComponent;
                 sumYForce += yForceComponent;
-
             }
 
         });
@@ -144,20 +151,24 @@ const moveBodies = (bodies, deltaT) =>
             {
                 const approxSquareThickness = Math.sqrt(2) * body1.thickness / 2;
 
-                if (body1.x < body2.x + approxSquareThickness &&
-                    body1.x > body2.x - approxSquareThickness &&
-                    body1.y < body2.y + approxSquareThickness &&
-                    body1.y > body2.y - approxSquareThickness)
+                if (body1.x <= body2.x + approxSquareThickness &&
+                    body1.x >= body2.x - approxSquareThickness &&
+                    body1.y <= body2.y + approxSquareThickness &&
+                    body1.y >= body2.y - approxSquareThickness)
                 {
-                    // Collision. Remove the smaller body.
-                    if (body1.mass < body2.mass)
-                    {
-                        bodies.splice(idx1, 1);
-                    }
-                    else
-                    {
-                        bodies.splice(idx2, 1);
-                    }
+                    // Collision
+                    // Conserve momentum and combine objects.
+                    const finalMass = body1.mass + body2.mass;
+                    const finalXVelocity = ((body1.mass * body1.xVelocity) + (body2.mass * body2.xVelocity)) / finalMass;
+                    const finalYVelocity = ((body1.mass * body1.yVelocity) + (body2.mass * body2.yVelocity)) / finalMass;
+
+                    // Set body2 to be combined body.
+                    bodies[idx2].id += (" + " + body1.id);
+                    bodies[idx2].xVelocity = finalXVelocity;
+                    bodies[idx2].yVelocity = finalYVelocity;
+                    bodies[idx2].mass = finalMass;
+
+                    bodies.splice(idx1, 1);
                 }
             }
         });
@@ -172,13 +183,12 @@ speedSlider.addEventListener("input", () =>
     deltaT = speedSlider.value;
 });
 
-calculateThickness(bodies);
-
 // Calculate physics
 setInterval(() =>
 {
     calculateVelocity(bodies, deltaT);
     moveBodies(bodies, deltaT);
+    calculateThickness(bodies);
 }, 1);
 
 // Render frame
