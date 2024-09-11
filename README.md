@@ -1,4 +1,4 @@
-# N Body Gravitational Simulator
+# N-Body Gravitational Simulator
 
 I quickly coded this customizable simulator in JS to emulate gravitational interactions between masses. Keep in mind that as simulation speed increases, the time delta will result in less accurate simulation.
 
