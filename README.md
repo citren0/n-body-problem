@@ -8,7 +8,7 @@ Also I acknowledge my limitations in the area of physics, so I cannot guarantee 
 
 Open index.html in your favorite browser by entering the URL:
 ```
-  file:///{clone location}/index.html
+file:///{clone location}/index.html
 ```
 
 ## How to Customize?
