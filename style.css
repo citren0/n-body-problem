@@ -1,0 +1,13 @@
+
+body
+{
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+canvas
+{
+    border: 1px black solid;
+}
